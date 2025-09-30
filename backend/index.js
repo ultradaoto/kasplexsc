@@ -11,7 +11,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 const eventMonitor = require('./services/eventMonitor');
-const apiRoutes = require('./api/routes');
+const apiRoutes = require('./routes');  // MVC Routes
 const logger = require('./utils/logger');
 
 const app = express();
