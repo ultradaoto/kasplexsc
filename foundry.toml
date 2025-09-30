@@ -1,0 +1,72 @@
+# Foundry Configuration for Kasplex IP Tokenization Project
+
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+script = "script"
+
+# Solidity compiler version
+solc_version = "0.8.22"
+evm_version = "shanghai"
+
+# Optimizer settings for gas efficiency (critical on L2)
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+
+# Gas reports
+gas_reports = ["*"]
+gas_reports_ignore = []
+
+# Test configuration
+fuzz = { runs = 10000 }  # 10k runs for comprehensive fuzz testing
+invariant = { runs = 256, depth = 15 }
+
+# Remappings for OpenZeppelin contracts
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+    "forge-std/=lib/forge-std/src/"
+]
+
+# Build information
+build_info = true
+extra_output = ["storageLayout", "metadata"]
+
+# Formatting
+[fmt]
+line_length = 100
+tab_width = 4
+bracket_spacing = false
+int_types = "long"
+multiline_func_header = "all"
+quote_style = "double"
+number_underscore = "thousands"
+
+# Network: Kasplex Testnet Configuration
+[rpc_endpoints]
+kasplex_testnet = "https://rpc.kasplextest.xyz"
+
+[etherscan]
+kasplex_testnet = { key = "${ETHERSCAN_API_KEY}", url = "https://frontend.kasplextest.xyz/api" }
+
+# Profile for Kasplex testnet deployment
+[profile.kasplex]
+src = "src"
+out = "out"
+libs = ["lib"]
+optimizer = true
+optimizer_runs = 200
+
+# Profile for testing with higher verbosity
+[profile.test]
+verbosity = 3
+gas_reports = ["*"]
+
+# Profile for CI/CD
+[profile.ci]
+fuzz = { runs = 50000 }
+invariant = { runs = 512 }
+verbosity = 4

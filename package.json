@@ -1,0 +1,61 @@
+{
+  "name": "kasplex-agricultural-ip",
+  "version": "1.0.0",
+  "description": "Agricultural IP tokenization system on Kasplex testnet with automated royalty distributions",
+  "main": "backend/index.js",
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js",
+    "test": "forge test",
+    "test:coverage": "forge coverage",
+    "test:gas": "forge test --gas-report",
+    "compile": "forge build",
+    "deploy:kasplex": "forge script script/Deploy.s.sol:DeployScript --rpc-url $KASPLEX_RPC_URL --broadcast --verify -vvvv",
+    "deploy:tokenizer": "forge script script/Deploy.s.sol:DeployIPTokenizer --rpc-url $KASPLEX_RPC_URL --broadcast -vvvv",
+    "format": "prettier --write \"backend/**/*.js\" && forge fmt",
+    "lint": "eslint backend/**/*.js && forge fmt --check",
+    "backend:start": "node backend/index.js",
+    "backend:dev": "nodemon backend/index.js"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "kasplex",
+    "ip-nft",
+    "tokenization",
+    "agriculture",
+    "biotech",
+    "smart-contracts",
+    "defi",
+    "royalties"
+  ],
+  "author": "Kasplex Agricultural IP Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ethers": "^6.9.0",
+    "dotenv": "^16.3.1",
+    "mongoose": "^8.0.3",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "axios": "^1.6.2",
+    "ipfs-http-client": "^60.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.1",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/kasplex-agricultural-ip"
+  }
+}
