@@ -154,10 +154,10 @@ contract AgriculturalIPNFTTest is Test {
 
         // Update licensed acres
         vm.prank(admin);
-        ipnft.updateLicensedAcres(tokenId, 10000);
+        ipnft.updateLicensedAcres(tokenId, 10_000);
 
         AgriculturalIPNFT.IPMetadata memory metadata = ipnft.getIPMetadata(tokenId);
-        assertEq(metadata.licensedAcres, 10000);
+        assertEq(metadata.licensedAcres, 10_000);
     }
 
     function testUpdateMetadataURI() public {
@@ -230,7 +230,7 @@ contract AgriculturalIPNFTTest is Test {
         );
 
         // Check royalty info
-        (address receiver, uint256 royaltyAmount) = ipnft.royaltyInfo(tokenId, 10000);
+        (address receiver, uint256 royaltyAmount) = ipnft.royaltyInfo(tokenId, 10_000);
         assertEq(receiver, user1);
         assertEq(royaltyAmount, 500); // 5% of 10000
     }
@@ -259,10 +259,7 @@ contract AgriculturalIPNFTTest is Test {
         assertEq(ipnft.getFractionalizer(tokenId), fractionalizer);
     }
 
-    function testFuzzMintIPNFT(
-        address _to,
-        uint96 _royaltyBps
-    ) public {
+    function testFuzzMintIPNFT(address _to, uint96 _royaltyBps) public {
         vm.assume(_to != address(0));
         vm.assume(_royaltyBps <= 1000);
         vm.assume(_to.code.length == 0); // Only EOAs, not contracts
@@ -280,8 +277,8 @@ contract AgriculturalIPNFTTest is Test {
         );
 
         assertEq(ipnft.ownerOf(tokenId), _to);
-        
-        (address receiver, ) = ipnft.royaltyInfo(tokenId, 10000);
+
+        (address receiver,) = ipnft.royaltyInfo(tokenId, 10_000);
         assertEq(receiver, _to);
     }
 }

@@ -14,12 +14,12 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
  * @author Kasplex Agricultural IP Team
  * @notice ERC-721 based IP-NFT for tokenizing agricultural biotech intellectual property
  * @dev Implements ERC-2981 for royalty standard with role-based access control
- * 
+ *
  * This contract enables the tokenization of agricultural biotechnology IP, specifically
  * for bacterial pesticide alternatives. Each NFT represents ownership of unique IP
  * with associated metadata including crop species, bacterial strain information,
  * regulatory approvals, and licensed acreage data.
- * 
+ *
  * Security Features:
  * - Role-based access control (MINTER_ROLE, LICENSING_ROLE, UPGRADER_ROLE)
  * - Pausable for emergency situations
@@ -95,9 +95,7 @@ contract AgriculturalIPNFT is
 
     /// @notice Emitted when an IP-NFT is fractionalized
     event IPNFTFractionalized(
-        uint256 indexed tokenId,
-        address indexed fractionalizer,
-        address indexed tokenOwner
+        uint256 indexed tokenId, address indexed fractionalizer, address indexed tokenOwner
     );
 
     /// @notice Emitted when royalty information is updated
@@ -120,7 +118,10 @@ contract AgriculturalIPNFT is
         string memory _symbol,
         address _admin,
         string memory baseURI_
-    ) public initializer {
+    )
+        public
+        initializer
+    {
         require(_admin != address(0), "AgriculturalIPNFT: admin is zero address");
 
         __ERC721_init(_name, _symbol);
@@ -160,9 +161,16 @@ contract AgriculturalIPNFT is
         string memory _metadataURI,
         address _royaltyReceiver,
         uint96 _royaltyBps
-    ) external onlyRole(MINTER_ROLE) whenNotPaused returns (uint256) {
+    )
+        external
+        onlyRole(MINTER_ROLE)
+        whenNotPaused
+        returns (uint256)
+    {
         require(_to != address(0), "AgriculturalIPNFT: mint to zero address");
-        require(_royaltyReceiver != address(0), "AgriculturalIPNFT: royalty receiver is zero address");
+        require(
+            _royaltyReceiver != address(0), "AgriculturalIPNFT: royalty receiver is zero address"
+        );
         require(_royaltyBps <= MAX_ROYALTY_BPS, "AgriculturalIPNFT: royalty too high");
         require(bytes(_cropSpecies).length > 0, "AgriculturalIPNFT: crop species required");
         require(bytes(_bacterialStrain).length > 0, "AgriculturalIPNFT: bacterial strain required");
@@ -196,7 +204,10 @@ contract AgriculturalIPNFT is
      * @param _tokenId Token ID
      * @param _newMetadataURI New IPFS metadata URI
      */
-    function updateMetadataURI(uint256 _tokenId, string memory _newMetadataURI)
+    function updateMetadataURI(
+        uint256 _tokenId,
+        string memory _newMetadataURI
+    )
         external
         onlyRole(MINTER_ROLE)
     {
@@ -213,7 +224,10 @@ contract AgriculturalIPNFT is
      * @param _tokenId Token ID
      * @param _newAcreage New licensed acreage amount
      */
-    function updateLicensedAcres(uint256 _tokenId, uint256 _newAcreage)
+    function updateLicensedAcres(
+        uint256 _tokenId,
+        uint256 _newAcreage
+    )
         external
         onlyRole(LICENSING_ROLE)
     {
@@ -229,7 +243,10 @@ contract AgriculturalIPNFT is
      * @param _tokenId Token ID
      * @param _fractionalizer Address of the fractionalizer contract
      */
-    function setFractionalized(uint256 _tokenId, address _fractionalizer)
+    function setFractionalized(
+        uint256 _tokenId,
+        address _fractionalizer
+    )
         external
         onlyRole(MINTER_ROLE)
     {
@@ -249,7 +266,11 @@ contract AgriculturalIPNFT is
      * @param _receiver New royalty receiver
      * @param _feeNumerator New royalty fee in basis points
      */
-    function updateRoyalty(uint256 _tokenId, address _receiver, uint96 _feeNumerator)
+    function updateRoyalty(
+        uint256 _tokenId,
+        address _receiver,
+        uint96 _feeNumerator
+    )
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -340,7 +361,12 @@ contract AgriculturalIPNFT is
         address to,
         uint256 tokenId,
         address auth
-    ) internal override whenNotPaused returns (address) {
+    )
+        internal
+        override
+        whenNotPaused
+        returns (address)
+    {
         return super._update(to, tokenId, auth);
     }
 

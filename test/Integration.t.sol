@@ -43,10 +43,8 @@ contract IntegrationTest is Test {
 
         // Deploy RoyaltyDistributor
         RoyaltyDistributor distImpl = new RoyaltyDistributor();
-        bytes memory distInitData = abi.encodeWithSelector(
-            RoyaltyDistributor.initialize.selector,
-            admin
-        );
+        bytes memory distInitData =
+            abi.encodeWithSelector(RoyaltyDistributor.initialize.selector, admin);
         ERC1967Proxy distProxy = new ERC1967Proxy(address(distImpl), distInitData);
         distributor = RoyaltyDistributor(payable(address(distProxy)));
 
@@ -67,7 +65,7 @@ contract IntegrationTest is Test {
     function testFullTokenizationFlow() public {
         // 1. Deploy tokenizer implementation
         IPTokenizer tokenizerImpl = new IPTokenizer();
-        
+
         // 2. Transfer NFT from user1 to user1 (just approve)
         vm.startPrank(user1);
         ipnft.setApprovalForAll(address(this), true);
@@ -77,7 +75,7 @@ contract IntegrationTest is Test {
             IPTokenizer.initialize.selector,
             address(ipnft),
             tokenId,
-            1_000_000 * 10**18,
+            1_000_000 * 10 ** 18,
             "Agricultural IP Token",
             "AGRI-IPT",
             user1,
@@ -89,14 +87,14 @@ contract IntegrationTest is Test {
 
         // 3. Verify fractionalization
         assertTrue(ipnft.isFramentalized(tokenId));
-        assertEq(tokenizer.balanceOf(user1), 1_000_000 * 10**18);
+        assertEq(tokenizer.balanceOf(user1), 1_000_000 * 10 ** 18);
         assertEq(ipnft.ownerOf(tokenId), address(tokenizer));
 
         // 4. Transfer some tokens to user2
         vm.prank(user1);
-        tokenizer.transfer(user2, 200_000 * 10**18);
+        tokenizer.transfer(user2, 200_000 * 10 ** 18);
 
-        assertEq(tokenizer.balanceOf(user2), 200_000 * 10**18);
+        assertEq(tokenizer.balanceOf(user2), 200_000 * 10 ** 18);
 
         // 5. Add revenue
         vm.deal(user3, 10 ether);
@@ -158,7 +156,7 @@ contract IntegrationTest is Test {
             IPTokenizer.initialize.selector,
             address(ipnft),
             tokenId,
-            1_000_000 * 10**18,
+            1_000_000 * 10 ** 18,
             "Agricultural IP Token",
             "AGRI-IPT",
             user1,
@@ -178,14 +176,14 @@ contract IntegrationTest is Test {
 
         // Transfer some tokens to user2
         vm.prank(user1);
-        tokenizer.transfer(user2, 300_000 * 10**18);
+        tokenizer.transfer(user2, 300_000 * 10 ** 18);
 
         vm.prank(user2);
         tokenizer.delegate(user2);
 
         // Vote on proposal
         vm.roll(block.number + 1);
-        
+
         vm.prank(user1);
         tokenizer.castVote(proposalId, true);
 

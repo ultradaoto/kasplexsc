@@ -96,7 +96,7 @@ contract DeployIPTokenizer is Script {
         // Get parameters from environment
         address ipnftAddress = vm.envAddress("IPNFT_ADDRESS");
         uint256 tokenId = vm.envUint("TOKEN_ID");
-        uint256 fractionalSupply = vm.envOr("FRACTIONAL_SUPPLY", uint256(1_000_000 * 10**18));
+        uint256 fractionalSupply = vm.envOr("FRACTIONAL_SUPPLY", uint256(1_000_000 * 10 ** 18));
         uint256 quorumBps = vm.envOr("QUORUM_BPS", uint256(5100)); // 51% default
 
         console.log("========================================");

@@ -15,11 +15,11 @@ import "./AgriculturalIPNFT.sol";
  * @author Kasplex Agricultural IP Team
  * @notice Fractionalizes IP-NFTs into fungible ERC-20 governance tokens (IPTs)
  * @dev Implements ERC20Votes for on-chain governance and revenue distribution
- * 
+ *
  * This contract enables fractionalization of Agricultural IP-NFTs into tradeable
  * governance tokens. Token holders can vote on IP licensing decisions and receive
  * proportional revenue distributions from licensing fees.
- * 
+ *
  * Key Features:
  * - Lock IP-NFT and mint fractional tokens
  * - Governance voting rights via ERC20Votes
@@ -81,9 +81,7 @@ contract IPTokenizer is
 
     /// @notice Emitted when IP-NFT is fractionalized
     event IPNFTFractionalized(
-        uint256 indexed tokenId,
-        address indexed owner,
-        uint256 fractionalSupply
+        uint256 indexed tokenId, address indexed owner, uint256 fractionalSupply
     );
 
     /// @notice Emitted when revenue is added for distribution
@@ -102,12 +100,7 @@ contract IPTokenizer is
     );
 
     /// @notice Emitted when a vote is cast
-    event VoteCast(
-        uint256 indexed proposalId,
-        address indexed voter,
-        bool support,
-        uint256 weight
-    );
+    event VoteCast(uint256 indexed proposalId, address indexed voter, bool support, uint256 weight);
 
     /// @notice Emitted when a proposal is executed
     event ProposalExecuted(uint256 indexed proposalId);
@@ -138,11 +131,14 @@ contract IPTokenizer is
         string memory _tokenSymbol,
         address _initialOwner,
         uint256 _quorumBps
-    ) public initializer {
+    )
+        public
+        initializer
+    {
         require(_ipnftContract != address(0), "IPTokenizer: IPNFT contract is zero address");
         require(_fractionalSupply > 0, "IPTokenizer: fractional supply must be positive");
         require(_initialOwner != address(0), "IPTokenizer: initial owner is zero address");
-        require(_quorumBps > 0 && _quorumBps <= 10000, "IPTokenizer: invalid quorum");
+        require(_quorumBps > 0 && _quorumBps <= 10_000, "IPTokenizer: invalid quorum");
 
         __ERC20_init(_tokenName, _tokenSymbol);
         __ERC20Votes_init();
@@ -207,7 +203,7 @@ contract IPTokenizer is
         lastClaimedRevenue[msg.sender] += claimable;
         totalDistributed += claimable;
 
-        (bool success, ) = msg.sender.call{value: claimable}("");
+        (bool success,) = msg.sender.call{value: claimable}("");
         require(success, "IPTokenizer: revenue transfer failed");
 
         emit RevenueClaimed(msg.sender, claimable);
@@ -219,7 +215,10 @@ contract IPTokenizer is
      * @param _votingPeriod Duration of voting in blocks
      * @return proposalId ID of the created proposal
      */
-    function createProposal(string memory _description, uint256 _votingPeriod)
+    function createProposal(
+        string memory _description,
+        uint256 _votingPeriod
+    )
         external
         returns (uint256)
     {
@@ -240,11 +239,7 @@ contract IPTokenizer is
         proposal.canceled = false;
 
         emit ProposalCreated(
-            proposalId,
-            msg.sender,
-            _description,
-            proposal.startBlock,
-            proposal.endBlock
+            proposalId, msg.sender, _description, proposal.startBlock, proposal.endBlock
         );
 
         return proposalId;
@@ -290,7 +285,7 @@ contract IPTokenizer is
         Proposal storage proposal = proposals[_proposalId];
 
         uint256 totalVotes = proposal.forVotes + proposal.againstVotes;
-        uint256 quorumRequired = (totalSupply() * quorumBps) / 10000;
+        uint256 quorumRequired = (totalSupply() * quorumBps) / 10_000;
 
         return totalVotes >= quorumRequired;
     }
@@ -344,12 +339,15 @@ contract IPTokenizer is
         emit IPNFTRedeemed(msg.sender, msg.value);
     }
 
-
     /**
      * @notice Hook called on token updates (transfer, mint, burn)
      * @dev Updates voting power tracking
      */
-    function _update(address from, address to, uint256 value)
+    function _update(
+        address from,
+        address to,
+        uint256 value
+    )
         internal
         override(ERC20Upgradeable, ERC20VotesUpgradeable)
     {

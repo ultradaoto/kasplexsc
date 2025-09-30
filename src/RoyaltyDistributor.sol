@@ -13,11 +13,11 @@ import "@openzeppelin/contracts/utils/Address.sol";
  * @author Kasplex Agricultural IP Team
  * @notice Automated royalty distribution system for Agricultural IP-NFTs
  * @dev Implements pull-based payment system with multi-beneficiary support
- * 
+ *
  * This contract manages automated royalty distributions from agricultural IP licensing.
  * It supports multiple beneficiaries per IP-NFT, tracks all distributions for compliance,
  * and uses a pull-based payment system to optimize gas costs.
- * 
+ *
  * Key Features:
  * - Multiple beneficiaries with custom share percentages
  * - Pull-based payment to minimize gas costs
@@ -35,7 +35,7 @@ contract RoyaltyDistributor is
     using Address for address payable;
 
     /// @dev Basis points denominator (10000 = 100%)
-    uint256 public constant BPS_DENOMINATOR = 10000;
+    uint256 public constant BPS_DENOMINATOR = 10_000;
 
     /// @dev Maximum number of beneficiaries per IP
     uint256 public constant MAX_BENEFICIARIES = 50;
@@ -96,16 +96,12 @@ contract RoyaltyDistributor is
 
     /// @notice Emitted when a beneficiary is added
     event BeneficiaryAdded(
-        uint256 indexed ipnftTokenId,
-        address indexed beneficiary,
-        uint256 shareBps
+        uint256 indexed ipnftTokenId, address indexed beneficiary, uint256 shareBps
     );
 
     /// @notice Emitted when a beneficiary is updated
     event BeneficiaryUpdated(
-        uint256 indexed ipnftTokenId,
-        address indexed beneficiary,
-        uint256 newShareBps
+        uint256 indexed ipnftTokenId, address indexed beneficiary, uint256 newShareBps
     );
 
     /// @notice Emitted when a beneficiary is removed
@@ -116,9 +112,7 @@ contract RoyaltyDistributor is
 
     /// @notice Emitted when royalties are withdrawn
     event RoyaltiesWithdrawn(
-        uint256 indexed ipnftTokenId,
-        address indexed beneficiary,
-        uint256 amount
+        uint256 indexed ipnftTokenId, address indexed beneficiary, uint256 amount
     );
 
     /// @notice Emitted when royalties are distributed
@@ -152,16 +146,17 @@ contract RoyaltyDistributor is
         uint256 _ipnftTokenId,
         address[] calldata _beneficiaries,
         uint256[] calldata _shareBps
-    ) external onlyOwner {
+    )
+        external
+        onlyOwner
+    {
         require(!poolExists[_ipnftTokenId], "RoyaltyDistributor: pool already exists");
         require(_beneficiaries.length > 0, "RoyaltyDistributor: no beneficiaries");
         require(
-            _beneficiaries.length == _shareBps.length,
-            "RoyaltyDistributor: array length mismatch"
+            _beneficiaries.length == _shareBps.length, "RoyaltyDistributor: array length mismatch"
         );
         require(
-            _beneficiaries.length <= MAX_BENEFICIARIES,
-            "RoyaltyDistributor: too many beneficiaries"
+            _beneficiaries.length <= MAX_BENEFICIARIES, "RoyaltyDistributor: too many beneficiaries"
         );
 
         // Validate shares sum to 100%
@@ -180,11 +175,7 @@ contract RoyaltyDistributor is
         // Add beneficiaries
         for (uint256 i = 0; i < _beneficiaries.length; i++) {
             pool.beneficiaries.push(
-                Beneficiary({
-                    beneficiary: _beneficiaries[i],
-                    shareBps: _shareBps[i],
-                    isActive: true
-                })
+                Beneficiary({beneficiary: _beneficiaries[i], shareBps: _shareBps[i], isActive: true})
             );
 
             emit BeneficiaryAdded(_ipnftTokenId, _beneficiaries[i], _shareBps[i]);
@@ -214,7 +205,10 @@ contract RoyaltyDistributor is
      * @param _beneficiary Address of the beneficiary
      * @return Withdrawable amount
      */
-    function withdrawableAmount(uint256 _ipnftTokenId, address _beneficiary)
+    function withdrawableAmount(
+        uint256 _ipnftTokenId,
+        address _beneficiary
+    )
         public
         view
         returns (uint256)
@@ -226,7 +220,8 @@ contract RoyaltyDistributor is
 
         // Find beneficiary and their share
         for (uint256 i = 0; i < pool.beneficiaries.length; i++) {
-            if (pool.beneficiaries[i].beneficiary == _beneficiary && pool.beneficiaries[i].isActive) {
+            if (pool.beneficiaries[i].beneficiary == _beneficiary && pool.beneficiaries[i].isActive)
+            {
                 beneficiaryShare = pool.beneficiaries[i].shareBps;
                 break;
             }
@@ -335,7 +330,10 @@ contract RoyaltyDistributor is
         uint256 _ipnftTokenId,
         address _beneficiary,
         uint256 _newShareBps
-    ) external onlyOwner {
+    )
+        external
+        onlyOwner
+    {
         require(poolExists[_ipnftTokenId], "RoyaltyDistributor: pool does not exist");
         require(_beneficiary != address(0), "RoyaltyDistributor: zero address beneficiary");
 
